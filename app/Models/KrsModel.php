@@ -12,7 +12,7 @@ class KrsModel extends Model
     protected $returnType       = 'array';
     protected $protectFields    = true;
     
-    // Kolom yang diizinkan untuk diisi (Insert/Update)
+    // Kolom yang wajib sama dengan di database Anda
     protected $allowedFields    = [
         'id_mahasiswa', 
         'id_matakuliah', 
@@ -21,15 +21,13 @@ class KrsModel extends Model
         'nilai_angka'
     ];
 
-    // Aktifkan fitur pencatatan waktu otomatis
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    // Dimatikan agar tidak error "Unknown column updated_at"
+    protected $useTimestamps = false;
 
     /**
      * getKrsGrouped
-     * Digunakan untuk menampilkan 1 baris per mahasiswa di halaman utama KRS.
-     * Menggabungkan banyak mata kuliah menjadi satu string (GROUP_CONCAT).
+     * Dipakai di halaman INDEX (Tampilan Utama)
+     * Menggabungkan banyak mata kuliah menjadi satu baris per mahasiswa/semester
      */
     public function getKrsGrouped($keyword = null)
     {
@@ -45,7 +43,6 @@ class KrsModel extends Model
             ')
             ->join('data_mahasiswa', 'data_mahasiswa.id = krs.id_mahasiswa')
             ->join('data_matakuliah', 'data_matakuliah.id = krs.id_matakuliah')
-            // Mengelompokkan agar data per semester tidak melebur jadi satu
             ->groupBy('krs.id_mahasiswa, krs.tahun_akademik, krs.semester')
             ->orderBy('krs.id', 'DESC');
 
@@ -61,13 +58,13 @@ class KrsModel extends Model
     }
 
     /**
-     * getKrsDetail
-     * Mengambil data per baris mata kuliah. 
-     * Digunakan untuk halaman Edit, Input Nilai, atau Cetak KHS.
+     * getKhsLengkap
+     * Dipakai di halaman CETAK (Print)
+     * Menampilkan semua detail mata kuliah tanpa digabung (per baris)
      */
-    public function getKrsDetail($id_mahasiswa = null, $semester = null)
+    public function getKhsLengkap()
     {
-        $builder = $this->select('
+        return $this->select('
                 krs.*, 
                 data_mahasiswa.nama as nama_mhs, 
                 data_mahasiswa.nim, 
@@ -77,28 +74,14 @@ class KrsModel extends Model
             ')
             ->join('data_mahasiswa', 'data_mahasiswa.id = krs.id_mahasiswa')
             ->join('data_matakuliah', 'data_matakuliah.id = krs.id_matakuliah');
-
-        if ($id_mahasiswa) {
-            $builder->where('krs.id_mahasiswa', $id_mahasiswa);
-        }
-        
-        if ($semester) {
-            $builder->where('krs.semester', $semester);
-        }
-
-        return $builder;
     }
 
     /**
-     * Validasi: Mencegah mahasiswa mengambil MK yang sama di semester yang sama
+     * getKrsLengkap
+     * Alias jika Controller memanggil nama ini
      */
-    public function isDuplicate($id_mhs, $id_mk, $sem, $ta)
+    public function getKrsLengkap($keyword = null)
     {
-        return $this->where([
-            'id_mahasiswa'   => $id_mhs,
-            'id_matakuliah'  => $id_mk,
-            'semester'       => $sem,
-            'tahun_akademik' => $ta
-        ])->first();
+        return $this->getKrsGrouped($keyword);
     }
 }

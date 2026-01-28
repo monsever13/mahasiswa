@@ -29,7 +29,40 @@ $routes->group('dosen', function($routes) {
     $routes->get('delete/(:num)', 'Dosen::delete/$1');
 });
 
-// 4. Rute Laporan Absensi
+// 4. Rute Manajemen Mata Kuliah
+$routes->group('matakuliah', function($routes) {
+    $routes->get('/', 'Matakuliah::index');
+    $routes->get('create', 'Matakuliah::create');
+    $routes->post('store', 'Matakuliah::store');
+    $routes->get('edit/(:num)', 'Matakuliah::edit/$1');
+    $routes->post('update/(:num)', 'Matakuliah::update/$1');
+    $routes->get('delete/(:num)', 'Matakuliah::delete/$1');
+});
+
+$routes->group('krs', function($routes) {
+    $routes->get('/', 'Krs::index');              // URL: /krs
+    $routes->get('create', 'Krs::create');        // URL: /krs/create
+    $routes->post('store', 'Krs::store');         // URL: /krs/store
+    $routes->get('edit/(:num)', 'Krs::edit/$1');  // URL: /krs/edit/ID
+    
+    // PERBAIKAN DI SINI:
+    $routes->post('add_item', 'Krs::add_item');     // URL: /krs/add_item
+    $routes->post('update_info', 'Krs::update_info'); // URL: /krs/update_info
+    $routes->delete('delete/(:num)', 'Krs::delete/$1'); // URL: /krs/delete/ID
+    $routes->get('print_all', 'Krs::print_all');
+    $routes->get('print_individu/(:num)', 'Krs::print_individu/$1');
+});
+
+// 6. Rute KHS
+$routes->group('khs', function($routes) {
+    $routes->get('/', 'Khs::index');
+    $routes->get('detail/(:num)', 'Khs::detail/$1');
+    $routes->post('update/(:num)', 'Khs::update/$1');
+    $routes->get('print/(:num)', 'Khs::print/$1');
+    $routes->delete('delete/(:num)', 'Khs::delete/$1');
+});
+
+// 7. Rute Laporan Absensi
 $routes->group('absensi', function($routes) {
     $routes->get('/', 'Absensi::index');
     $routes->get('create', 'Absensi::create');
@@ -37,35 +70,4 @@ $routes->group('absensi', function($routes) {
     $routes->get('edit/(:num)', 'Absensi::edit/$1');
     $routes->post('update/(:num)', 'Absensi::update/$1');
     $routes->get('print/(:num)', 'Absensi::print/$1');
-});
-
-$routes->group('matakuliah', function($routes) {
-    $routes->get('/', 'Matakuliah::index');
-    $routes->get('create', 'Matakuliah::create');
-    $routes->post('store', 'Matakuliah::store');
-    $routes->get('edit/(:num)', 'Matakuliah::edit/$1');
-    $routes->post('update/(:num)', 'Matakuliah::update/$1');
-    
-    // TAMBAHKAN BARIS INI:
-    $routes->get('delete/(:num)', 'Matakuliah::delete/$1');
-});
-
-$routes->group('krs', function($routes) {
-    $routes->get('/', 'Krs::index');
-    $routes->get('create', 'Krs::create');
-    $routes->post('store', 'Krs::store');
-    $routes->get('delete_mhs/(:num)', 'Krs::delete_mhs/$1');
-    
-    // TAMBAHKAN BARIS INI
-    $routes->get('print_individu/(:num)', 'Krs::print_individu/$1');
-    
-    $routes->get('print', 'Krs::print');
-});
-
-$routes->group('khs', function($routes) {
-    $routes->get('/', 'Khs::index');
-    $routes->get('detail/(:num)', 'Khs::detail/$1'); // URL: /khs/detail/ID
-    $routes->post('update/(:num)', 'Khs::update/$1');
-    $routes->get('print/(:num)', 'Khs::print/$1');
-    $routes->delete('delete/(:num)', 'Khs::delete/$1');
 });
