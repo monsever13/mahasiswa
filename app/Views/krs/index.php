@@ -8,7 +8,6 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <div>
                 <a href="/krs/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Tambah KRS</a>
-                <a href="/krs/print_all" target="_blank" class="btn btn-secondary btn-sm"><i class="fas fa-print"></i> Cetak Semua</a>
             </div>
             
             <form action="" method="get">

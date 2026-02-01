@@ -149,6 +149,10 @@
         <i class="fas fa-fw fa-file-alt"></i>
         <span>Kartu Hasil Studi (KHS)</span>
     </a>
+
+    <a href="<?= base_url('absensi'); ?>" class="nav-link <?= (url_is('absensi*')) ? 'active' : ''; ?>">
+            <i class="fas fa-clipboard-check"></i> Absensi Mahasiswa
+        </a>
 </li>
 </li>
 </nav>
